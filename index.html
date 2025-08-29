@@ -2,189 +2,97 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap">
-
-    <style>
-        body {
-            background-color: #6610f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        h1, p, h3 {
-            color: #e6e5f7;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .board {
-            background-color: #e6e5f7;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            width: 325px;
-            margin: 20px auto;
-            border: 0px solid #ccc;
-        }
-        .cell {
-            width: 100px;
-            height: 100px;
-            border: 5px solid #1b1b1d;
-            text-align: center;
-            line-height: 100px;
-            font-size: 3rem;
-            cursor: pointer;
-        }
-        .cell:hover {
-            background-color: #eee;
-        }
-        .winner {
-            background-color: #99ff99;
-        }
-        #reset-button {
-            background-color: #99ff99;
-            margin-top: 20px;
-            padding: 10px 20px;
-            border: 2px solid #e6e5f7;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #winner-name {
-            font-weight: bold;
-            margin-top: 20px;
-        }
-        .signature {
-        font-family: 'Dancing Script', cursive;
-        font-size: 24px;
-        color: #6ddd7f;
-        font-weight: bold;
-        letter-spacing: 1px;
-        text-decoration: none;
-        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-       }
-
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Tic Tac Toe - Mobile Game</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Tic-Tac-Toe</h1>
-        
-        <div class="board">
-            <div class="cell" data-cell-index="0"></div>
-            <div class="cell" data-cell-index="1"></div>
-            <div class="cell" data-cell-index="2"></div>
-            <div class="cell" data-cell-index="3"></div>
-            <div class="cell" data-cell-index="4"></div>
-            <div class="cell" data-cell-index="5"></div>
-            <div class="cell" data-cell-index="6"></div>
-            <div class="cell" data-cell-index="7"></div>
-            <div class="cell" data-cell-index="8"></div>
+        <!-- Header Section -->
+        <header class="game-header">
+            <h1 class="game-title">Tic Tac Toe</h1>
+            <div class="mode-selector" id="modeSelector">
+                <button class="btn btn--primary mode-btn active" data-mode="pvp" id="pvpBtn">
+                    <span class="mode-title">Player vs Player</span>
+                    <span class="mode-desc">Play against a friend</span>
+                </button>
+                <button class="btn btn--outline mode-btn" data-mode="ai" id="aiBtn">
+                    <span class="mode-title">Player vs AI</span>
+                    <span class="mode-desc">Challenge the computer</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Game Status Section -->
+        <section class="game-status">
+            <div class="status-row">
+                <div class="current-player">
+                    <span class="player-label">Current Turn:</span>
+                    <span class="player-indicator" id="currentPlayer">X</span>
+                </div>
+                <div class="game-state-message" id="gameMessage">Make your move!</div>
+            </div>
+        </section>
+
+        <!-- Score Board -->
+        <section class="scoreboard">
+            <div class="score-item">
+                <div class="score-label">Player X</div>
+                <div class="score-value" id="scoreX">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label" id="playerOLabel">Player O</div>
+                <div class="score-value" id="scoreO">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">Draws</div>
+                <div class="score-value" id="scoreDraw">0</div>
+            </div>
+        </section>
+
+        <!-- Game Board -->
+        <main class="game-board-container">
+            <div class="game-board" id="gameBoard">
+                <div class="cell" data-cell="0"></div>
+                <div class="cell" data-cell="1"></div>
+                <div class="cell" data-cell="2"></div>
+                <div class="cell" data-cell="3"></div>
+                <div class="cell" data-cell="4"></div>
+                <div class="cell" data-cell="5"></div>
+                <div class="cell" data-cell="6"></div>
+                <div class="cell" data-cell="7"></div>
+                <div class="cell" data-cell="8"></div>
+            </div>
+            <div class="winning-line" id="winningLine"></div>
+        </main>
+
+        <!-- Control Buttons -->
+        <section class="game-controls">
+            <button class="btn btn--secondary btn--lg control-btn" id="newGameBtn">
+                New Game
+            </button>
+            <button class="btn btn--outline btn--lg control-btn" id="resetScoreBtn">
+                Reset Score
+            </button>
+        </section>
+
+        <!-- Game Over Modal -->
+        <div class="modal hidden" id="gameOverModal">
+            <div class="modal-overlay" id="modalOverlay"></div>
+            <div class="modal-content" id="modalContent">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="modalTitle">Game Over</h2>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-message" id="modalMessage">Player X wins!</p>
+                    <div class="modal-actions">
+                        <button class="btn btn--primary btn--lg" id="playAgainBtn">Play Again</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <h1 id="message"></h1>
-        <div>
-            <button id="reset-button">Reset Game</button>
-        </div>
-        <h3>Made By : <span class="signature">Rajesh Bhola</span></h3>
-        
     </div>
 
-    <script>
-        const cells = document.querySelectorAll('.cell');
-        const resetButton = document.getElementById('reset-button');
-        let turn = 'X';
-        let gameOver = false;
-        let playerNames = {
-            'X': '',
-            'O': ''
-        };
-        const winningConditions = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8],
-            [0, 3, 6], [1, 4, 7], [2, 5, 8],
-            [0, 4, 8], [2, 4, 6]
-        ];
-
-        function getPlayerNames() {
-            playerNames['X'] = document.getElementById('player1').value || 'Player 1';
-            playerNames['O'] = document.getElementById('player2').value || 'Player 2';
-        }
-
-        function checkWinner() {
-            let draw = true;
-            for (let condition of winningConditions) {
-                const cell1 = cells[condition[0]].textContent;
-                const cell2 = cells[condition[1]].textContent;
-                const cell3 = cells[condition[2]].textContent;
-
-                if (cell1 === cell2 && cell2 === cell3 && cell1 !== '') {
-                    gameOver = true;
-                    document.getElementById('message').textContent = `${cell1} Wins!`;
-                    //document.getElementById('winner-name').textContent = `${playerNames[cell1]} Wins!`;
-                    highlightWinnerCells(condition);
-                    return;
-                }
-            }
-            for (let cell of cells) {
-                if (cell.textContent === '') {
-                    draw = false;
-                    break;
-                }
-            }
-
-            if (draw) {
-                gameOver = true;
-                document.getElementById('message').textContent = "It's a Draw!";
-                cells.forEach(cell => cell.style.backgroundColor = 'red');
-            }
-
-            if ([...cells].every(cell => cell.textContent !== '')) {
-                gameOver = true;
-                document.getElementById('message').textContent = "It's a Draw!";
-            }
-        }
-
-        function highlightWinnerCells(cellsToHighlight) {
-            cellsToHighlight.forEach(index => cells[index].classList.add('winner'));
-        }
-
-        function handleCellClick(event) {
-            const cell = event.target;
-            const cellIndex = parseInt(cell.dataset.cellIndex);
-
-            if (cell.textContent !== '' || gameOver) {
-                return;
-            }
-
-            cell.textContent = turn;
-            checkWinner();
-
-            if (!gameOver) {
-                turn = turn === 'X' ? 'O' : 'X';
-                document.getElementById('message').textContent = `Next Turn: (${turn})`;
-            }
-        }
-
-        function resetGame() {
-            cells.forEach(cell => {
-                cell.textContent = '';
-                cell.classList.remove('winner');
-                cell.style.backgroundColor = '';
-            });
-            turn = 'X';
-            gameOver = false;
-            document.getElementById('message').textContent = '';
-            document.getElementById('winner-name').textContent = '';
-            //document.getElementById('player1').value = '';
-            //document.getElementById('player2').value = '';
-        }
-
-        cells.forEach(cell => cell.addEventListener('click', handleCellClick));
-        resetButton.addEventListener('click', resetGame);
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
